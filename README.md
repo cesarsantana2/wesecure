@@ -341,3 +341,38 @@ Esta seção detalha como configurar permissões para o `iptables` e realizar os
   sudo iptables -L -v
   ```
     - A saída deve listar a regra com o endereço MAC configurado.
+
+#### **3. Teste do Script Python**
+
+- Execute o script Python para monitorar os logs do `hostapd` em tempo real:
+  ```bash
+  python3 script.py
+  ```
+  - Simule múltiplas tentativas de conexão de um dispositivo não autorizado. Isso pode ser feito inserindo credenciais incorretas repetidamente em um dispositivo que tenta acessar a rede.
+  - Monitore as mensagens geradas pelo script no terminal. O script deve identificar os dispositivos suspeitos e registrar mensagens como:
+  ```
+  [INFO] Dispositivo suspeito detectado: MAC xx:xx:xx:xx:xx:xx
+  [INFO] Bloqueio aplicado para o MAC xx:xx:xx:xx:xx:xx
+  ```
+  - Certifique-se de que o endereço MAC do dispositivo é exibido corretamente no log do terminal.
+
+#### **4. Validação do Bloqueio**
+
+- Após executar o script Python e detectar dispositivos suspeitos, confirme que o bloqueio foi aplicado corretamente no `iptables`:
+
+  1. **Verifique as Regras do `iptables`:**
+     - Liste as regras atuais do `iptables` para garantir que o endereço MAC do dispositivo foi bloqueado:
+       ```bash
+       sudo iptables -L -v
+       ```
+     - Procure por uma entrada que inclua o endereço MAC suspeito.
+
+  2. **Teste a Conexão do Dispositivo Bloqueado:**
+     - Tente conectar o dispositivo bloqueado à rede Wi-Fi.
+     - Verifique se o acesso é negado, confirmando que o bloqueio foi efetivo.
+
+  3. **Confirmação no Log do Script:**
+     - Certifique-se de que o log gerado pelo script registra o bloqueio aplicado:
+       ```plaintext
+       [INFO] Bloqueio aplicado para o MAC xx:xx:xx:xx:xx:xx
+       ```
